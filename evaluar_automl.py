@@ -64,6 +64,14 @@ def obtener_conexion():
         logger.error(f"No se pudo conectar a PostgreSQL: {e}")
         raise
 
+def asegurar_conexion(conn):
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT 1")
+    except:
+        conn = obtener_conexion()
+    return conn
+
 # ----------------------------------------------------------------------
 # Inserción de resultados
 INSERT_QUERY = sql.SQL("""
@@ -231,6 +239,7 @@ def procesar_archivo(ruta: str, tipo: str, conn):
                     **metricas,
                 }
                 try:
+                    conn = asegurar_conexion(conn)
                     guardar_resultado(conn, registro)
                     logger.info(f"Guardado OK: auto_sklearn2, task {task_id}")
                 except Exception as e:
@@ -248,6 +257,7 @@ def procesar_archivo(ruta: str, tipo: str, conn):
                     **metricas_error,
                 }
                 try:
+                    conn = asegurar_conexion(conn)
                     guardar_resultado(conn, registro_error)
                     logger.info(f"Guardado REGISTRO DE ERROR: auto_sklearn2, task {task_id} con métricas=-1111")
                 except Exception as db_error:
