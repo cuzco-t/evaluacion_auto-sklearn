@@ -1,0 +1,134 @@
+2026-05-03 08:15:18 [ERROR] No se pudo conectar a PostgreSQL: connection to server at "localhost" (::1), port 5432 failed: fe_sendauth: no password supplied
+
+2026-05-03 08:15:18 [CRITICAL] No se puede continuar sin base de datos.
+2026-05-03 08:16:34 [ERROR] No se pudo conectar a PostgreSQL: connection to server at "localhost" (::1), port 5432 failed: fe_sendauth: no password supplied
+
+2026-05-03 08:16:34 [CRITICAL] No se puede continuar sin base de datos.
+2026-05-03 08:18:37 [ERROR] No se pudo conectar a PostgreSQL: connection to server at "localhost" (::1), port 5432 failed: fe_sendauth: no password supplied
+
+2026-05-03 08:18:37 [CRITICAL] No se puede continuar sin base de datos.
+2026-05-03 08:22:06 [ERROR] No se pudo conectar a PostgreSQL: connection to server at "localhost" (::1), port 5432 failed: fe_sendauth: no password supplied
+
+2026-05-03 08:22:06 [CRITICAL] No se puede continuar sin base de datos.
+2026-05-03 08:24:45 [ERROR] No se pudo conectar a PostgreSQL: connection to server at "localhost" (::1), port 5432 failed: fe_sendauth: no password supplied
+
+2026-05-03 08:24:45 [CRITICAL] No se puede continuar sin base de datos.
+2026-05-03 08:26:15 [ERROR] No se pudo conectar a PostgreSQL: connection to server at "localhost" (::1), port 5432 failed: fe_sendauth: no password supplied
+
+2026-05-03 08:26:15 [CRITICAL] No se puede continuar sin base de datos.
+2026-05-03 08:26:48 [INFO] Conexión a base de datos establecida.
+2026-05-03 08:26:48 [INFO] Procesando archivo data/openml-cc18.txt (clasificacion)
+2026-05-03 08:26:48 [INFO] Iniciando task_id=3 (clasificacion)
+2026-05-03 08:26:59 [INFO] pickle write kr-vs-kp
+2026-05-03 08:26:59 [ERROR] Error al cargar datos del task 3: 'Result' object has no attribute 'is_ok'
+Traceback (most recent call last):
+  File "C:\Users\Asus\Documents\VSCode\tesis\otros_automl\evaluar_automl.py", line 236, in procesar_archivo
+    X_train, X_test, y_train, y_test, nombre_dataset = cargar_y_dividir(task_id, tipo)
+                                                       ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\Asus\Documents\VSCode\tesis\otros_automl\evaluar_automl.py", line 118, in cargar_y_dividir
+    if not resultado.is_ok():
+           ^^^^^^^^^^^^^^^
+AttributeError: 'Result' object has no attribute 'is_ok'
+
+2026-05-03 08:26:59 [INFO] Iniciando task_id=6 (clasificacion)
+2026-05-03 08:26:59 [INFO] pickle write letter
+2026-05-03 08:26:59 [ERROR] Error al cargar datos del task 6: 'Result' object has no attribute 'is_ok'
+Traceback (most recent call last):
+  File "C:\Users\Asus\Documents\VSCode\tesis\otros_automl\evaluar_automl.py", line 236, in procesar_archivo
+    X_train, X_test, y_train, y_test, nombre_dataset = cargar_y_dividir(task_id, tipo)
+                                                       ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\Asus\Documents\VSCode\tesis\otros_automl\evaluar_automl.py", line 118, in cargar_y_dividir
+    if not resultado.is_ok():
+           ^^^^^^^^^^^^^^^
+AttributeError: 'Result' object has no attribute 'is_ok'
+
+2026-05-03 08:26:59 [INFO] Procesando archivo data/openml-ctr23.txt (regresion)
+2026-05-03 08:26:59 [INFO] Iniciando task_id=361234 (regresion)
+2026-05-03 08:26:59 [INFO] Starting [get] request for the URL https://www.openml.org/api/v1/xml/task/361234
+2026-05-03 08:27:00 [INFO] 1.6500781s taken for [get] request for the URL https://www.openml.org/api/v1/xml/task/361234
+2026-05-03 08:27:00 [INFO] Starting [get] request for the URL https://www.openml.org/api/v1/xml/data/44956
+2026-05-03 08:27:02 [INFO] 1.3089471s taken for [get] request for the URL https://www.openml.org/api/v1/xml/data/44956
+2026-05-03 08:27:02 [INFO] Redirecting http://data.openml.org/datasets/0004/44956/dataset_44956.pq -> https://data.openml.org:443/datasets/0004/44956/dataset_44956.pq
+2026-05-03 08:27:04 [INFO] Redirecting http://data.openml.org/datasets/0004/44956/dataset_44956.pq -> https://data.openml.org:443/datasets/0004/44956/dataset_44956.pq
+2026-05-03 08:27:04 [INFO] pickle write abalone
+2026-05-03 08:27:04 [ERROR] Error al cargar datos del task 361234: 'Result' object has no attribute 'is_ok'
+Traceback (most recent call last):
+  File "C:\Users\Asus\Documents\VSCode\tesis\otros_automl\evaluar_automl.py", line 236, in procesar_archivo
+    X_train, X_test, y_train, y_test, nombre_dataset = cargar_y_dividir(task_id, tipo)
+                                                       ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\Asus\Documents\VSCode\tesis\otros_automl\evaluar_automl.py", line 118, in cargar_y_dividir
+    if not resultado.is_ok():
+           ^^^^^^^^^^^^^^^
+AttributeError: 'Result' object has no attribute 'is_ok'
+
+2026-05-03 08:27:04 [INFO] Iniciando task_id=361235 (regresion)
+2026-05-03 08:27:04 [INFO] Starting [get] request for the URL https://www.openml.org/api/v1/xml/task/361235
+2026-05-03 08:27:06 [INFO] 2.0632081s taken for [get] request for the URL https://www.openml.org/api/v1/xml/task/361235
+2026-05-03 08:27:06 [INFO] Starting [get] request for the URL https://www.openml.org/api/v1/xml/data/44957
+2026-05-03 08:27:08 [INFO] 1.7327015s taken for [get] request for the URL https://www.openml.org/api/v1/xml/data/44957
+2026-05-03 08:27:08 [INFO] Redirecting http://data.openml.org/datasets/0004/44957/dataset_44957.pq -> https://data.openml.org:443/datasets/0004/44957/dataset_44957.pq
+2026-05-03 08:27:10 [INFO] Redirecting http://data.openml.org/datasets/0004/44957/dataset_44957.pq -> https://data.openml.org:443/datasets/0004/44957/dataset_44957.pq
+2026-05-03 08:27:10 [INFO] pickle write airfoil_self_noise
+2026-05-03 08:27:10 [ERROR] Error al cargar datos del task 361235: 'Result' object has no attribute 'is_ok'
+Traceback (most recent call last):
+  File "C:\Users\Asus\Documents\VSCode\tesis\otros_automl\evaluar_automl.py", line 236, in procesar_archivo
+    X_train, X_test, y_train, y_test, nombre_dataset = cargar_y_dividir(task_id, tipo)
+                                                       ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\Asus\Documents\VSCode\tesis\otros_automl\evaluar_automl.py", line 118, in cargar_y_dividir
+    if not resultado.is_ok():
+           ^^^^^^^^^^^^^^^
+AttributeError: 'Result' object has no attribute 'is_ok'
+
+2026-05-03 08:27:10 [INFO] Conexión a base de datos cerrada.
+2026-05-03 08:28:22 [INFO] Conexión a base de datos establecida.
+2026-05-03 08:28:36 [INFO] Procesando archivo data/openml-cc18.txt (clasificacion)
+2026-05-03 08:28:39 [INFO] Iniciando task_id=3 (clasificacion)
+2026-05-03 08:28:39 [INFO] pickle write kr-vs-kp
+2026-05-03 08:28:39 [ERROR] Error al cargar datos del task 3: 'Result' object has no attribute 'is_ok'
+Traceback (most recent call last):
+  File "C:\Users\Asus\Documents\VSCode\tesis\otros_automl\evaluar_automl.py", line 236, in procesar_archivo
+    X_train, X_test, y_train, y_test, nombre_dataset = cargar_y_dividir(task_id, tipo)
+                                                       ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\Asus\Documents\VSCode\tesis\otros_automl\evaluar_automl.py", line 118, in cargar_y_dividir
+    if not resultado.is_ok():
+           ^^^^^^^^^^^^^^^
+AttributeError: 'Result' object has no attribute 'is_ok'
+
+2026-05-03 08:28:39 [INFO] Iniciando task_id=6 (clasificacion)
+2026-05-03 08:28:39 [INFO] pickle write letter
+2026-05-03 08:28:39 [ERROR] Error al cargar datos del task 6: 'Result' object has no attribute 'is_ok'
+Traceback (most recent call last):
+  File "C:\Users\Asus\Documents\VSCode\tesis\otros_automl\evaluar_automl.py", line 236, in procesar_archivo
+    X_train, X_test, y_train, y_test, nombre_dataset = cargar_y_dividir(task_id, tipo)
+                                                       ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\Asus\Documents\VSCode\tesis\otros_automl\evaluar_automl.py", line 118, in cargar_y_dividir
+    if not resultado.is_ok():
+           ^^^^^^^^^^^^^^^
+AttributeError: 'Result' object has no attribute 'is_ok'
+
+2026-05-03 08:28:44 [INFO] Procesando archivo data/openml-ctr23.txt (regresion)
+2026-05-03 08:29:21 [INFO] Iniciando task_id=361234 (regresion)
+2026-05-03 08:29:43 [INFO] pickle write abalone
+2026-05-03 08:29:48 [ERROR] Error al cargar datos del task 361234: 'Result' object has no attribute 'is_ok'
+Traceback (most recent call last):
+  File "C:\Users\Asus\Documents\VSCode\tesis\otros_automl\evaluar_automl.py", line 236, in procesar_archivo
+    X_train, X_test, y_train, y_test, nombre_dataset = cargar_y_dividir(task_id, tipo)
+                                                       ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\Asus\Documents\VSCode\tesis\otros_automl\evaluar_automl.py", line 118, in cargar_y_dividir
+    if not resultado.is_ok():
+           ^^^^^^^^^^^^^^^
+AttributeError: 'Result' object has no attribute 'is_ok'
+
+2026-05-03 08:29:48 [INFO] Iniciando task_id=361235 (regresion)
+2026-05-03 08:29:48 [INFO] pickle write airfoil_self_noise
+2026-05-03 08:29:48 [ERROR] Error al cargar datos del task 361235: 'Result' object has no attribute 'is_ok'
+Traceback (most recent call last):
+  File "C:\Users\Asus\Documents\VSCode\tesis\otros_automl\evaluar_automl.py", line 236, in procesar_archivo
+    X_train, X_test, y_train, y_test, nombre_dataset = cargar_y_dividir(task_id, tipo)
+                                                       ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\Asus\Documents\VSCode\tesis\otros_automl\evaluar_automl.py", line 118, in cargar_y_dividir
+    if not resultado.is_ok():
+           ^^^^^^^^^^^^^^^
+AttributeError: 'Result' object has no attribute 'is_ok'
+
+2026-05-03 08:29:48 [INFO] Conexión a base de datos cerrada.
