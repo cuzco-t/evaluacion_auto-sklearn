@@ -126,7 +126,7 @@ def cargar_y_dividir(task_id: int, tipo: str):
     # Dividir (20% test)
     stratify = y if tipo == "clasificacion" else None
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42, stratify=stratify
+        X, y, test_size=0.2, random_state=912, stratify=stratify
     )
     return X_train, X_test, y_train, y_test, nombre
 
@@ -145,12 +145,12 @@ def evaluar_autosklearn(tipo: str, X_train, y_train, X_test, y_test):
 
     if tipo == "clasificacion":
         automl = AutoSklearnClassifier(
-            random_state=42,
+            random_state=912,
             time_limit=1200
         )
     else:
         automl = AutoSklearnRegressor(
-            random_state=42,
+            random_state=912,
             time_limit=1200
         )
 
