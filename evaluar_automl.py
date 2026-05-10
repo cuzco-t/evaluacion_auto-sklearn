@@ -146,10 +146,12 @@ def evaluar_autosklearn(tipo: str, X_train, y_train, X_test, y_test):
     if tipo == "clasificacion":
         automl = AutoSklearnClassifier(
             random_state=42,
+            time_limit=1200
         )
     else:
         automl = AutoSklearnRegressor(
             random_state=42,
+            time_limit=1200
         )
 
     inicio = time.perf_counter()
