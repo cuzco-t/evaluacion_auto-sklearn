@@ -2,10 +2,12 @@ import logging
 import os
 import time
 import traceback
+import threading
 from typing import Optional
 
 import numpy as np
 import pandas as pd
+import psutil
 import psycopg2
 from psycopg2 import sql
 from sklearn.metrics import (
@@ -20,6 +22,13 @@ from sklearn.metrics import (
     r2_score,
 )
 from sklearn.model_selection import train_test_split
+
+try:
+    import pynvml
+    pynvml.nvmlInit()
+    GPU_DISPONIBLE = True
+except (ImportError, pynvml.NVMLError):
+    GPU_DISPONIBLE = False
 
 # Asegúrate de que openml_descargador.py y result.py estén en el path
 from openml_descargador import OpenMLDescargador
@@ -79,12 +88,14 @@ INSERT_QUERY = sql.SQL("""
         nombre_automl, task_id, nombre_dataset, fuente, tiempo,
         f1, accuracy, "precision", recall,
         mae, mse, rmse, medae, ev, r2,
-        silhouette, calinski, davies
+        silhouette, calinski, davies,
+        cpu_porcentaje, gpu_porcentaje, ram_mb
     ) VALUES (
         %s, %s, %s, %s, %s,
         %s, %s, %s, %s,
         %s, %s, %s, %s, %s, %s,
-        NULL, NULL, NULL
+        NULL, NULL, NULL,
+        %s, %s, %s
     )
 """)
 
@@ -107,6 +118,9 @@ def guardar_resultado(conn, registro: dict):
             registro["medae"],
             registro["ev"],
             registro["r2"],
+            registro["cpu_porcentaje"],
+            registro["gpu_porcentaje"],
+            registro["ram_mb"],
         ))
 
 # ----------------------------------------------------------------------
@@ -131,10 +145,67 @@ def cargar_y_dividir(task_id: int, tipo: str):
     return X_train, X_test, y_train, y_test, nombre
 
 # ----------------------------------------------------------------------
+# Monitor de recursos
+class ResourceMonitor:
+    """Monitorea CPU, RAM y GPU en un hilo de fondo durante la ejecución."""
+
+    def __init__(self, intervalo=1.0):
+        self.intervalo = intervalo
+        self._running = False
+        self._thread = None
+        self._lock = threading.Lock()
+        self._cpu_samples = []
+        self._ram_samples = []
+        self._gpu_samples = []
+
+    def start(self):
+        self._running = True
+        self._thread = threading.Thread(target=self._monitor, daemon=True)
+        self._thread.start()
+
+    def stop(self):
+        self._running = False
+        if self._thread:
+            self._thread.join(timeout=5)
+
+    def _monitor(self):
+        while self._running:
+            with self._lock:
+                self._cpu_samples.append(psutil.cpu_percent(interval=None))
+                self._ram_samples.append(psutil.virtual_memory().used / (1024 * 1024))
+                if GPU_DISPONIBLE:
+                    try:
+                        handle = pynvml.nvmlDeviceGetHandleByIndex(0)
+                        util = pynvml.nvmlDeviceGetUtilizationRates(handle)
+                        self._gpu_samples.append(util.gpu)
+                    except pynvml.NVMLError:
+                        self._gpu_samples.append(0)
+            time.sleep(self.intervalo)
+
+    def get_peak_usage(self):
+        with self._lock:
+            cpu_peak = max(self._cpu_samples) if self._cpu_samples else 0
+            ram_peak = max(self._ram_samples) if self._ram_samples else 0
+            gpu_peak = max(self._gpu_samples) if self._gpu_samples else 0
+        return {
+            "cpu_porcentaje": round(cpu_peak, 2),
+            "ram_mb": round(ram_peak, 2),
+            "gpu_porcentaje": round(gpu_peak, 2),
+        }
+
+    def __enter__(self):
+        self.start()
+        return self
+
+    def __exit__(self, *args):
+        self.stop()
+
+
+# ----------------------------------------------------------------------
 # Funciones de evaluación por herramienta
 
 def evaluar_autosklearn(tipo: str, X_train, y_train, X_test, y_test):
-    """Entrena y evalúa auto-sklearn 2. Retorna (métricas_dict, tiempo)."""
+    """Entrena y evalúa auto-sklearn 2. Retorna (métricas_dict, tiempo, recursos_dict)."""
     # Definir tipos de features
     feat_types = []
     for col in X_train.columns:
@@ -155,12 +226,14 @@ def evaluar_autosklearn(tipo: str, X_train, y_train, X_test, y_test):
         )
 
     inicio = time.perf_counter()
-    automl.fit(X_train.copy(), y_train.copy())
-    y_pred = automl.predict(X_test)
+    with ResourceMonitor(intervalo=0.5) as monitor:
+        automl.fit(X_train.copy(), y_train.copy())
+        y_pred = automl.predict(X_test)
     tiempo = time.perf_counter() - inicio
+    recursos = monitor.get_peak_usage()
 
     metricas = calcular_metricas(tipo, y_test, y_pred)
-    return metricas, tiempo
+    return metricas, tiempo, recursos
 
 # ----------------------------------------------------------------------
 # Cálculo de métricas
@@ -199,6 +272,9 @@ def get_metricas_error():
         "medae": -1111,
         "ev": -1111,
         "r2": -1111,
+        "cpu_porcentaje": -1111,
+        "gpu_porcentaje": -1111,
+        "ram_mb": -1111,
     }
 
 # ----------------------------------------------------------------------
@@ -231,7 +307,7 @@ def procesar_archivo(ruta: str, tipo: str, conn):
         # Probar auto-sklearn 2
         if AUTOSKLEARN_DISPONIBLE:
             try:
-                metricas, tiempo = evaluar_autosklearn(tipo, X_train, y_train, X_test, y_test)
+                metricas, tiempo, recursos = evaluar_autosklearn(tipo, X_train, y_train, X_test, y_test)
                 registro = {
                     "nombre_automl": "auto_sklearn2",
                     "task_id": task_id,
@@ -239,6 +315,7 @@ def procesar_archivo(ruta: str, tipo: str, conn):
                     "fuente": fuente,
                     "tiempo": round(tiempo, 2),
                     **metricas,
+                    **recursos,
                 }
                 try:
                     conn = asegurar_conexion(conn)
@@ -295,6 +372,11 @@ def main():
             except Exception as e:
                 logger.critical(f"Error inesperado en archivo {archivo}: {e}")
     finally:
+        if GPU_DISPONIBLE:
+            try:
+                pynvml.nvmlShutdown()
+            except Exception:
+                pass
         if conn:
             conn.close()
             logger.info("Conexión a base de datos cerrada.")
